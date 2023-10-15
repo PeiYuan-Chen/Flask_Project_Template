@@ -17,29 +17,40 @@ class BaseModel(db.Model):
         try:
             db.session.add(self)
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
-            print(f"{self.__class__.__name__} {self.id} insertion error!")
+            print(f"Insertion error for {self.__class__.__name__} {self.id}: {e}")
             raise
-        finally:
-            db.session.close()
 
     def update(self):
         try:
             db.session.commit()
-        except:
-            print(f"{self.__class__.__name__} {self.id} update error!")
+        except Exception as e:
+            print(f"Update error for {self.__class__.__name__} {self.id}: {e}")
             raise
-        finally:
-            db.session.close()
 
     def delete(self):
         try:
             db.session.delete(self)
             db.session.commit()
-        except:
+        except Exception as e:
             db.session.rollback()
-            print(f"{self.__class__.__name__} {self.id} delete error!")
+            print(f"Delete error for {self.__class__.__name__} {self.id}: {e}")
             raise
-        finally:
-            db.session.close()
+
+
+class Book(BaseModel):
+    __tablename__ = "books"
+
+    title = db.Column(db.String())
+    author = db.Column(db.String())
+    rating = db.Column(db.String())
+
+    @property
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "author": self.author,
+            "rating": self.rating,
+        }

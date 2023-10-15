@@ -11,3 +11,7 @@ def bad_request(error):
 
 def method_not_allowed(error):
     return jsonify(success=False, error=405, message="Method Not Allowed"), 405
+
+
+def internal_error(error):
+    return jsonify(success=False, error=500, message="Internal Error"), 500

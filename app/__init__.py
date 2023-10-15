@@ -2,7 +2,7 @@ import os
 from flask import Flask
 from flask_cors import CORS
 from flask_migrate import Migrate
-from app.config import DevConfig, ProdConfig, TestConfig
+from config import DevConfig, ProdConfig, TestConfig
 from app.buleprints.main import main
 from .models import db
 from .errorhandlers import bad_request, not_found, method_not_allowed
@@ -24,9 +24,9 @@ def create_app():
     # buleprint
     app.register_blueprint(main)
     # error handlers
+    app.register_error_handler(400, bad_request)
     app.register_error_handler(404, not_found)
     app.register_error_handler(405, method_not_allowed)
-    app.register_error_handler(500, bad_request)
     # database
     db.init_app(app)
     # migrate
@@ -45,3 +45,5 @@ def create_app():
             "Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"
         )
         return response
+
+    return app
